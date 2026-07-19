@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandip Subedi — Data, Applied Differently.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B;
+    --bg-soft:#111113;
+    --panel:#161618;
+    --text:#F4F3EF;
+    --text-dim:#9B9B9F;
+    --text-faint:#5B5B60;
+    --lime:#CBFF4D;
+    --violet:#9C8CFF;
+    --line:rgba(244,243,239,0.10);
+    --line-strong:rgba(244,243,239,0.20);
+    --radius:22px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--lime);color:#0A0A0B;}
+  a{color:inherit;text-decoration:none;}
+  .disp{font-family:'Bricolage Grotesque',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  img,svg{display:block;}
+
+  /* ---------------- FLOATING NAV ---------------- */
+  .navwrap{position:fixed;top:22px;left:0;right:0;z-index:200;display:flex;justify-content:center;padding:0 20px;}
+  nav{
+    display:flex;align-items:center;gap:6px;
+    background:rgba(20,20,22,0.7);
+    border:1px solid var(--line-strong);
+    backdrop-filter:blur(14px);
+    border-radius:100px;
+    padding:8px 8px 8px 22px;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,0.6);
+  }
+  .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;margin-right:18px;white-space:nowrap;}
+  .nav-logo span{color:var(--lime);}
+  .nav-links{display:flex;gap:2px;}
+  .nav-links a{
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text-dim);
+    padding:9px 15px;border-radius:100px;transition:all .4s cubic-bezier(.16,1,.3,1);white-space:nowrap;
+  }
+  .nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.06);}
+  .nav-cta{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:13px;color:#0A0A0B;
+    background:var(--lime);padding:10px 18px;border-radius:100px;margin-left:8px;white-space:nowrap;
+    transition:transform .4s cubic-bezier(.16,1,.3,1);
+  }
+  .nav-cta:hover{transform:scale(1.04);}
+  @media (max-width:880px){ .nav-links{display:none;} .nav-logo{margin-right:10px;} }
+
+  /* ---------------- HERO ---------------- */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:150px 6vw 80px;overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+    width:120vw;height:120vw;max-width:1400px;max-height:1400px;
+    background:radial-gradient(circle, rgba(203,255,77,0.08) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .hero-eyebrow{
+    display:flex;align-items:center;gap:10px;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--text-dim);
+    margin-bottom:26px;opacity:0;animation:fadeUp .8s ease .1s forwards;
+  }
+  .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px var(--lime);}
+
+  .hero h1{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;
+    font-size:clamp(42px,7.4vw,108px);line-height:0.98;letter-spacing:-0.03em;
+    text-align:center;max-width:1150px;margin:0 auto;
+    opacity:0;animation:fadeUp .9s ease .25s forwards;
+  }
+  .hero h1 em{font-style:normal;color:var(--lime);}
+  .hero h1 .outline{-webkit-text-stroke:1.5px var(--line-strong);color:transparent;}
+
+  .hero-sub{
+    text-align:center;max-width:600px;margin:28px auto 0;
+    font-size:16.5px;line-height:1.7;color:var(--text-dim);
+    opacity:0;animation:fadeUp .9s ease .42s forwards;
+  }
+  .hero-sub b{color:var(--text);font-weight:600;}
+
+  .hero-stats{
+    display:flex;justify-content:center;gap:70px;margin-top:56px;
+    opacity:0;animation:fadeUp .9s ease .58s forwards;
+  }
+  .hstat .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:38px;color:var(--text);}
+  .hstat .l{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text-faint);margin-top:4px;line-height:1.35;}
+
+  .traits{
+    position:absolute;inset:0;pointer-events:none;z-index:1;
+  }
+  .trait-pill{
+    position:absolute;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);
+    border:1px solid var(--line-strong);padding:9px 16px;border-radius:100px;background:rgba(20,20,22,0.5);
+    backdrop-filter:blur(6px);white-space:nowrap;
+    animation:float 7s ease-in-out infinite;opacity:0;
+  }
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+  .hero-cta{display:flex;justify-content:center;gap:14px;margin-top:48px;flex-wrap:wrap;
+    opacity:0;animation:fadeUp .9s ease .72s forwards;}
+  .btn{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;padding:15px 28px;border-radius:100px;display:inline-flex;align-items:center;gap:8px;transition:all .45s cubic-bezier(.16,1,.3,1);}
+  .btn-lime{background:var(--lime);color:#0A0A0B;}
+  .btn-lime:hover{transform:translateY(-3px);box-shadow:0 14px 34px -10px rgba(203,255,77,0.45);}
+  .btn-outline{border:1px solid var(--line-strong);color:var(--text);}
+  .btn-outline:hover{border-color:var(--text-dim);transform:translateY(-3px);}
+
+  /* ---------------- SHARED SECTION ---------------- */
+  section{position:relative;padding:150px 6vw;max-width:1360px;margin:0 auto;}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--violet);text-transform:uppercase;margin-bottom:20px;}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;margin-bottom:70px;}
+  .sec-head h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(32px,4.6vw,58px);letter-spacing:-0.02em;max-width:620px;}
+  .sec-head p{max-width:340px;color:var(--text-dim);font-size:14.5px;line-height:1.7;}
+
+  .reveal{opacity:0;transform:translateY(36px);will-change:transform,opacity;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------------- ABOUT / PROFILE ---------------- */
+  .about-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:70px;align-items:start;}
+  .about-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:40px;position:relative;overflow:hidden;
+  }
+  .about-card .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;}
+  .about-card .tag-row span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-dim);border:1px solid var(--line);padding:6px 12px;border-radius:100px;}
+  .about-text p{font-size:18px;line-height:1.9;color:#D7D6D2;}
+  .about-text p + p{margin-top:20px;}
+  .about-text b{color:var(--text);font-weight:600;}
+
+  /* ---------------- JOURNEY TIMELINE ---------------- */
+  .journey{border-top:1px solid var(--line);}
+  .j-item{
+    display:grid;grid-template-columns:110px 1fr;gap:40px;
+    padding:44px 0;border-bottom:1px solid var(--line);
+  }
+  .j-year{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;color:var(--text-faint);transition:color .5s cubic-bezier(.16,1,.3,1);}
+  .j-item:hover .j-year{color:var(--lime);}
+  .j-body h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin-bottom:10px;}
+  .j-body p{font-size:14.5px;line-height:1.75;color:var(--text-dim);max-width:640px;}
+  .j-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--violet);margin-bottom:10px;letter-spacing:.04em;}
+
+  /* ---------------- PROJECTS ---------------- */
+  .proj-list{border-top:1px solid var(--line);}
+  .proj-row{
+    display:grid;grid-template-columns:70px 1.4fr 1fr auto;align-items:center;gap:30px;
+    padding:34px 22px;border-bottom:1px solid var(--line);
+    border-radius:16px;transition:background .5s cubic-bezier(.16,1,.3,1), padding-left .5s cubic-bezier(.16,1,.3,1);
+    cursor:default;
+  }
+  .proj-row:hover{background:rgba(255,255,255,0.03);padding-left:32px;}
+  .proj-idx{font-family:'IBM Plex Mono',monospace;color:var(--text-faint);font-size:13px;}
+  .proj-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:23px;}
+  .proj-name .status{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--lime);vertical-align:middle;margin-left:10px;border:1px solid rgba(203,255,77,0.3);padding:4px 9px;border-radius:100px;}
+  .proj-desc{font-size:13.5px;color:var(--text-dim);line-height:1.65;}
+  .proj-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:220px;}
+  .proj-tags span{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-dim);border:1px solid var(--line);padding:5px 9px;border-radius:100px;white-space:nowrap;}
+  @media (max-width:900px){
+    .proj-row{grid-template-columns:1fr;gap:10px;text-align:left;}
+    .proj-tags{justify-content:flex-start;max-width:100%;}
+  }
+
+  /* ---------------- PROJECT SHOWCASE (image + text, alternating) ---------------- */
+  .showcase{display:flex;flex-direction:column;gap:2px;}
+  .show-item{
+    display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;
+    padding:70px 0;border-bottom:1px solid var(--line);
+  }
+  .show-item:first-child{padding-top:0;}
+  .show-item.rev .show-media{order:2;}
+  .show-item.rev .show-body{order:1;}
+
+  .show-media{position:relative;perspective:1000px;}
+  .show-frame{
+    position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/3;
+    border:1px solid var(--line-strong);background:var(--panel);
+    box-shadow:0 40px 90px -35px rgba(0,0,0,0.75);
+    transform-style:preserve-3d;transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+  }
+  .show-frame:hover{box-shadow:0 50px 110px -30px rgba(0,0,0,0.85);}
+  .show-frame svg{width:100%;height:100%;display:block;}
+  .show-frame .wipe{position:absolute;inset:0;background:var(--bg);z-index:5;transform-origin:top;}
+  .show-ring{position:absolute;inset:-14px;border:1px dashed var(--line-strong);border-radius:32px;pointer-events:none;opacity:0.6;}
+  .show-badge{
+    position:absolute;bottom:18px;left:18px;z-index:6;
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-dim);
+    background:rgba(20,20,22,0.85);backdrop-filter:blur(10px);
+    border:1px solid var(--line-strong);border-radius:100px;padding:7px 14px;
+  }
+  .show-status{
+    position:absolute;top:18px;right:18px;z-index:6;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;padding:6px 12px;border-radius:100px;
+  }
+  .status-progress{color:var(--gold,#FFC857);border:1px solid rgba(255,200,87,0.35);background:rgba(255,200,87,0.1);}
+  .status-done{color:var(--lime);border:1px solid rgba(203,255,77,0.35);background:rgba(203,255,77,0.08);}
+
+  .show-body .idx{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--violet);margin-bottom:16px;}
+  .show-body h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(24px,2.6vw,32px);letter-spacing:-0.01em;margin-bottom:16px;}
+  .show-body p{font-size:15px;line-height:1.8;color:var(--text-dim);max-width:460px;margin-bottom:22px;}
+  .show-body .proj-tags{justify-content:flex-start;max-width:none;}
+  @media (max-width:860px){
+    .show-item, .show-item.rev{grid-template-columns:1fr;gap:30px;}
+    .show-item.rev .show-media{order:1;} .show-item.rev .show-body{order:2;}
+  }
+
+  /* ---------------- GRAPHIC DESIGN — POSTER MARQUEE ---------------- */
+  .poster-marquee-wrap{overflow:hidden;padding:34px 0 44px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+  .poster-track{display:flex;gap:22px;width:max-content;animation:posterScroll 32s linear infinite;}
+  .poster-track-reverse{animation-direction:reverse;}
+  .poster-card{
+    position:relative;width:210px;height:280px;border-radius:16px;overflow:hidden;flex-shrink:0;
+    background:linear-gradient(160deg,#1d1e22,#131316);
+    border:1px solid var(--line);
+    box-shadow:0 22px 46px -18px rgba(0,0,0,0.65);
+    transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s cubic-bezier(.16,1,.3,1);
+  }
+  .poster-card:hover{transform:scale(1.16);box-shadow:0 30px 70px -14px rgba(0,0,0,0.8);z-index:5;}
+  .poster-card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .poster-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+  .poster-fallback svg{width:32px;height:32px;opacity:0.4;}
+  .poster-fallback span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-faint);letter-spacing:0.02em;}
+  @keyframes posterScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (max-width:640px){.poster-card{width:150px;height:200px;}}
+
+
+  .bring-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .bring-card{background:var(--panel);padding:38px 32px;transition:background .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);}
+  .bring-card:hover{background:#191a1d;transform:translateY(-6px);}
+  .bring-card .num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--violet);margin-bottom:22px;}
+  .bring-card h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:19px;margin-bottom:12px;}
+  .bring-card p{font-size:13.5px;line-height:1.7;color:var(--text-dim);}
+  @media (max-width:900px){.bring-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:600px){.bring-grid{grid-template-columns:1fr;}}
+
+  /* ---- bring-card image pop (cursor-proximity) ---- */
+  .bring-card{position:relative;}
+  .bring-chip{
+    position:absolute;width:112px;height:82px;border-radius:13px;
+    background:linear-gradient(160deg,#1d1e22,#131316);
+    border:1px solid rgba(244,243,239,0.16);
+    box-shadow:0 22px 44px -16px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,0,0,0.25);
+    overflow:hidden;
+    opacity:0;pointer-events:none;z-index:4;will-change:transform,opacity,filter;
+  }
+  .bring-chip img{width:100%;height:100%;object-fit:cover;display:block;}
+  .bring-chip .chip-fallback{
+    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(150deg,#1c1d20,#131316);
+  }
+  .bring-chip .chip-fallback svg{width:26px;height:26px;opacity:0.55;}
+  .bring-card .chip-a{top:14px;right:14px;}
+  .bring-card .chip-b{top:74px;right:44px;}
+  .bring-card .chip-c{top:134px;right:8px;}
+  @media (hover:none){.bring-chip{display:none;}}
+  @media (max-width:640px){.bring-chip{display:none;}}
+
+  /* ---------------- ADDITIONAL / FREELANCE ---------------- */
+  .extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .extra-card{
+    border:1px solid var(--line);border-radius:var(--radius);padding:36px;
+    background:linear-gradient(160deg, rgba(156,140,255,0.06), transparent 60%);
+    transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .5s cubic-bezier(.16,1,.3,1);
+  }
+  .extra-card:hover{transform:translateY(-5px);border-color:var(--line-strong);}
+  .extra-card .price{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px;margin:16px 0 6px;}
+  .extra-card .price span{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-faint);font-weight:400;}
+  .extra-card h4{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:700;}
+  .extra-card p.d{font-size:13.5px;color:var(--text-dim);line-height:1.7;margin-top:14px;}
+
+  /* ---------------- MARQUEE ---------------- */
+  .marquee-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;background:var(--bg-soft);}
+  .marquee{display:flex;white-space:nowrap;animation:scroll 26s linear infinite;width:max-content;}
+  .marquee span{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;color:var(--text-faint);margin:0 34px;display:flex;align-items:center;gap:34px;}
+  .marquee span b{color:var(--text);}
+  .marquee span::after{content:"✦";color:var(--lime);font-size:14px;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------------- CONTACT / FOOTER ---------------- */
+  .cta-final{
+    text-align:center;border:1px solid var(--line-strong);border-radius:32px;
+    padding:100px 6vw;position:relative;overflow:hidden;
+    background:radial-gradient(circle at 50% 0%, rgba(203,255,77,0.08), transparent 60%);
+  }
+  .cta-final h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(34px,6vw,64px);letter-spacing:-0.02em;margin-bottom:22px;}
+  .cta-final p{color:var(--text-dim);font-size:15.5px;max-width:480px;margin:0 auto 40px;}
+  footer{padding:50px 6vw 60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-faint);max-width:1360px;margin:0 auto;}
+
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+
+  /* ---------------- PRELOADER ---------------- */
+  #preloader{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .7s ease, visibility .7s ease;}
+  #preloader.hide{opacity:0;visibility:hidden;}
+  .pre-word{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;color:var(--text-faint);position:relative;}
+  .pre-word::after{content:"";position:absolute;left:0;top:0;height:100%;width:0%;background:var(--lime);}
+  #preloader.animate .pre-word::after{animation:preload 1.1s cubic-bezier(.6,0,.2,1) forwards;}
+  @keyframes preload{to{width:100%;}}
+  .pre-bar{position:absolute;bottom:-14px;left:0;width:100%;height:1px;background:var(--line);overflow:hidden;}
+  .pre-bar::after{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:var(--lime);animation:preload 1.1s cubic-bezier(.6,0,.2,1) forwards;}
+
+  /* scroll progress */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--lime),var(--violet));width:0%;z-index:300;transition:width .05s linear;}
+
+  /* cursor glow */
+  .cursor-glow{position:fixed;top:0;left:0;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:0;
+    background:radial-gradient(circle, rgba(203,255,77,0.06), transparent 65%);
+    transform:translate(-50%,-50%);transition:opacity .3s ease;will-change:transform;}
+
+  /* ---------------- HERO PHOTO ---------------- */
+  .hero-flex{display:flex;align-items:center;justify-content:center;gap:64px;flex-wrap:wrap-reverse;position:relative;z-index:2;}
+  .hero-copy{flex:1 1 560px;max-width:640px;}
+  .hero-photo-wrap{position:relative;flex:0 0 auto;perspective:1000px;}
+  .hero-photo{
+    width:290px;height:340px;border-radius:28px;overflow:hidden;position:relative;
+    border:1px solid var(--line-strong);
+    box-shadow:0 40px 90px -30px rgba(0,0,0,0.7);
+    transform-style:preserve-3d;transition:transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center 18%;filter:grayscale(0.25) contrast(1.05);
+    transform:scale(1.08);transition:filter .4s ease;}
+  .hero-photo:hover img{filter:grayscale(0) contrast(1.08);}
+  .hero-photo::before{
+    content:"";position:absolute;inset:0;z-index:2;
+    background:linear-gradient(180deg, transparent 55%, rgba(10,10,11,0.75) 100%);
+  }
+  .hero-photo .wipe{position:absolute;inset:0;background:var(--bg);z-index:5;transform-origin:top;animation:wipeUp 1.1s cubic-bezier(.7,0,.2,1) .5s forwards;}
+  @keyframes wipeUp{to{transform:scaleY(0);}}
+  .photo-ring{position:absolute;inset:-18px;border:1px dashed var(--line-strong);border-radius:38px;animation:spin 30s linear infinite;pointer-events:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .photo-badge{
+    position:absolute;background:rgba(20,20,22,0.85);backdrop-filter:blur(10px);
+    border:1px solid var(--line-strong);border-radius:16px;padding:12px 16px;
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-dim);
+    box-shadow:0 20px 40px -18px rgba(0,0,0,0.6);
+    animation:float 6s ease-in-out infinite;
+  }
+  .photo-badge b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:16px;color:var(--text);font-weight:700;margin-bottom:2px;}
+  .badge-1{top:-26px;right:-46px;animation-delay:.3s;}
+  .badge-2{bottom:26px;left:-58px;animation-delay:1.4s;}
+  @media (max-width:1100px){ .hero-flex{flex-direction:column-reverse;} .hero-copy{text-align:center;} .hero-sub{margin-left:auto;margin-right:auto;} .hero-stats{justify-content:center;} .badge-1{right:-10px;} .badge-2{left:-10px;} }
+  @media (max-width:520px){ .hero-photo{width:230px;height:270px;} .badge-1,.badge-2{display:none;} }
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <div class="pre-word">LOADING PORTFOLIO<div class="pre-bar"></div></div>
+</div>
+<div class="progress-bar" id="progressBar"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="navwrap">
+  <nav>
+    <div class="nav-logo">SANDIP<span>.</span></div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#journey">Journey</a>
+      <a href="#projects">Projects</a>
+      <a href="#bring">What I bring</a>
+      <a href="#extra">Freelance</a>
+    </div>
+    <a class="nav-cta" href="#contact">Contact</a>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="traits">
+    <span class="trait-pill" style="top:22%;left:8%;animation-delay:.2s;">Analytical</span>
+    <span class="trait-pill" style="top:66%;left:6%;animation-delay:1.1s;">Detail-oriented</span>
+    <span class="trait-pill" style="top:16%;right:9%;animation-delay:.5s;">Self-taught</span>
+    <span class="trait-pill" style="top:60%;right:7%;animation-delay:1.6s;">Team leader</span>
+    <span class="trait-pill" style="top:38%;left:1%;animation-delay:2s;">Curious</span>
+    <span class="trait-pill" style="top:82%;right:16%;animation-delay:.8s;">Builder</span>
+  </div>
+  <div class="hero-flex">
+    <div class="hero-copy">
+      <div class="hero-eyebrow" style="justify-content:flex-start;"><span class="dot"></span>KATHMANDU, BAGMATI, NEPAL — OPEN TO INTERNSHIPS</div>
+      <h1 style="text-align:left;margin:0;">Data, <em>Applied</em><br><span class="outline">Differently.</span></h1>
+      <p class="hero-sub" style="text-align:left;margin-left:0;">I'm <b>Sandip Subedi</b>, an aspiring data analyst who turns raw, messy tables into clear findings — with <b>Python</b>, <b>Pandas</b>, and a habit of questioning the first answer a dataset gives me.</p>
+      <div class="hero-stats" style="justify-content:flex-start;">
+        <div class="hstat"><div class="n" data-count="4">0</div><div class="l">Self-built<br>data projects</div></div>
+        <div class="hstat"><div class="n" data-count="50" data-suffix="K+">0</div><div class="l">DATA records<br>analyzed</div></div>
+        <div class="hstat"><div class="n" data-count="2.5" data-suffix="+">0</div><div class="l">Years Design<br>Learning</div></div>
+      </div>
+      <div class="hero-cta" style="justify-content:flex-start;">
+        <a class="btn btn-lime magnetic" href="mailto:sandipsubedi012@gmail.com">Email Sandip →</a>
+        <a class="btn btn-outline magnetic" href="#projects">See the projects</a>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <div class="photo-ring"></div>
+      <div class="hero-photo" id="heroPhoto">
+        <img src="591276916_2298593087248904_3357881454980265871_n.jpg" alt="Sandip Subedi">
+        <div class="wipe"></div>
+      </div>
+      <div class="photo-badge badge-1"><b>4 Projects</b>shipped solo</div>
+      <div class="photo-badge badge-2"><b>SANDIP</b>sandipsubedi0</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span><b>Python</b> Pandas</span><span><b>NumPy</b> Matplotlib</span><span><b>Seaborn</b> scikit-learn</span><span><b>EDA</b> Data Cleaning</span><span><b>Dashboarding</b> Survey Design</span><span><b>Jupyter</b> Google Colab</span>
+    <span><b>Python</b> Pandas</span><span><b>NumPy</b> Matplotlib</span><span><b>Seaborn</b> scikit-learn</span><span><b>EDA</b> Data Cleaning</span><span><b>Dashboarding</b> Survey Design</span><span><b>Jupyter</b> Google Colab</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="kicker reveal">About me</div>
+  <div class="about-grid">
+    <div class="about-card reveal">
+      <div class="mono" style="font-size:12px;color:var(--text-faint);">CURRENTLY</div>
+      <h3 class="disp" style="font-size:24px;font-weight:700;margin-top:10px;">Data Analysis,<br> AI/ML Trainee</h3>
+      <p style="font-size:13.5px;color:var(--text-dim);margin-top:14px;line-height:1.7;">Budhanilkantha,Bhangal-02 · Nepal<br>Jun 2026 — Present</p>
+      <div class="tag-row">
+        <span>Python</span><span>DataAnalysis</span><span>MachineLearning</span><span>GraphicDesign</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <p>Aspiring data analyst with a <b>self-built portfolio of Python projects</b> spanning exploratory data analysis, data cleaning, and visualization. Combines analytical skills with real experience in <b>event leadership</b>, <b>project management</b>, and <b>graphic design</b>.</p>
+      <p>Completed +2 Science with a Computer Science focus, and is now seeking a <b>Data Analyst internship</b> to apply and grow these skills in a real team setting — while independently building a personal AI assistant, <b>NepJARVIS</b>, on the side.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="sec-head reveal">
+    <h2>My journey, <span style="color:var(--lime)">so far.</span></h2>
+    <p>Not a straight line — a school in Kathmandu, a club nobody had run in five years, and a growing stack of Jupyter notebooks.</p>
+  </div>
+  <div class="journey reveal">
+    <div class="j-item">
+      <div class="j-year">'17</div>
+      <div class="j-body">
+        <div class="j-tag">@education</div>
+        <h3>Where it started</h3>
+        <p>Began Secondary Education (SEE) at Shree Jana Uddhar Secondary School — seven years that built the foundation for everything after.</p>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-year">'22</div>
+      <div class="j-body">
+        <div class="j-tag">@leadership</div>
+        <h3>Taking the lead</h3>
+        <p>Started planning a school-wide science and technology carnival — the first in five years — with a 3-student core team. It would go on to draw 19–21 participating schools. Coordinated logistics, project development, and event execution, and partnered with Karkhana on technical components.</p>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-year">'24</div>
+      <div class="j-body">
+        <div class="j-tag">@present</div>
+        <h3>President, and a new chapter</h3>
+        <p>Re-established the STEAM Club after the carnival and was appointed President. Started +2 Science (Computer Science focus) at Valley Public High School, and began freelancing in graphic design and WordPress development alongside coursework.</p>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-year">'25</div>
+      <div class="j-body">
+        <div class="j-tag">@data</div>
+        <h3>Learning to read data properly</h3>
+        <p>Built out a run of independent analytics notebooks — Titanic survival patterns, HR attrition by department, and 14 years of BMW global sales data (~50,000 records) — each one taken from raw file to finished dashboard.</p>
+      </div>
+    </div>
+    <div class="j-item">
+      <div class="j-year">'26</div>
+      <div class="j-body">
+        <div class="j-tag">@now</div>
+        <h3>Still obsessed, still building</h3>
+        <p>Currently designing an original survey on student career readiness in Nepal — scope to predictive model — and building a personal AI assistant, NepJARVIS. Looking for a Data Analyst internship to do this inside a real team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-head reveal">
+    <h2>Selected <span style="color:var(--lime)">projects.</span></h2>
+    <p>Four notebooks, four different problems — raw data taken all the way to a finished, readable story.</p>
+  </div>
+  <div class="showcase">
+
+    <!-- 01 — Career Readiness -->
+    <div class="show-item" data-tilt-frame>
+      <div class="show-media">
+        <div class="show-ring"></div>
+        <div class="show-frame">
+          <span class="show-status status-progress">IN PROGRESS</span>
+          <span class="show-badge">survey · Kathmandu</span>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#15161a"/><stop offset="100%" stop-color="#0c0c0e"/>
+              </linearGradient>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFC857"/><stop offset="100%" stop-color="#CBFF4D"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#g1)"/>
+            <g stroke="rgba(244,243,239,0.06)" stroke-width="1">
+              <line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="120" x2="400" y2="120"/>
+              <line x1="0" y1="180" x2="400" y2="180"/><line x1="0" y1="240" x2="400" y2="240"/>
+            </g>
+            <!-- checklist card -->
+            <g transform="translate(36,64)">
+              <rect width="150" height="172" rx="14" fill="#1a1b1f" stroke="rgba(244,243,239,0.12)"/>
+              <rect x="20" y="24" width="110" height="8" rx="4" fill="rgba(244,243,239,0.25)"/>
+              <rect x="20" y="44" width="80" height="6" rx="3" fill="rgba(244,243,239,0.12)"/>
+              <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#9B9B9F">
+                <circle cx="30" cy="78" r="7" fill="none" stroke="#CBFF4D" stroke-width="1.5"/>
+                <path d="M27,78 l2,3 l5,-6" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="46" y="73" width="70" height="7" rx="3" fill="rgba(244,243,239,0.15)"/>
+                <circle cx="30" cy="104" r="7" fill="none" stroke="#CBFF4D" stroke-width="1.5"/>
+                <path d="M27,104 l2,3 l5,-6" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="46" y="99" width="55" height="7" rx="3" fill="rgba(244,243,239,0.15)"/>
+                <circle cx="30" cy="130" r="7" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.5"/>
+                <rect x="46" y="125" width="64" height="7" rx="3" fill="rgba(244,243,239,0.1)"/>
+                <circle cx="30" cy="156" r="7" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.5"/>
+                <rect x="46" y="151" width="48" height="7" rx="3" fill="rgba(244,243,239,0.1)"/>
+              </g>
+            </g>
+            <!-- progress ring -->
+            <g transform="translate(290,150)">
+              <circle r="62" fill="none" stroke="rgba(244,243,239,0.08)" stroke-width="12"/>
+              <circle r="62" fill="none" stroke="url(#ringGrad)" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="389.5" stroke-dashoffset="226" transform="rotate(-90)"/>
+              <text text-anchor="middle" y="6" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="30" fill="#F4F3EF">42%</text>
+              <text text-anchor="middle" y="26" font-family="IBM Plex Mono, monospace" font-size="10" fill="#9B9B9F">SCOPING</text>
+            </g>
+          </svg>
+          <div class="wipe"></div>
+        </div>
+      </div>
+      <div class="show-body">
+        <div class="idx">01 / @data</div>
+        <h3>Student Career Readiness in Nepal</h3>
+        <p>An original survey — not a Kaggle dataset — collecting anonymous responses from students across Kathmandu, studying whether Nepali students are building the skills and professional presence today's job market demands. Full pipeline planned: scope, exploration, cleaning, visualization, findings, and a predictive Career Readiness Score model, with RAG-based exploration also planned.</p>
+        <div class="proj-tags"><span>Python</span><span>Pandas</span><span>NumPy</span><span>Survey Design</span></div>
+      </div>
+    </div>
+
+    <!-- 02 — BMW -->
+    <div class="show-item rev" data-tilt-frame>
+      <div class="show-media">
+        <div class="show-ring"></div>
+        <div class="show-frame">
+          <span class="show-status status-done">COMPLETE</span>
+          <span class="show-badge">2010 – 2024 · ~50,000 records</span>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#141519"/><stop offset="100%" stop-color="#0c0c0e"/>
+              </linearGradient>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#9C8CFF"/><stop offset="100%" stop-color="#CBFF4D"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#g2)"/>
+            <g stroke="rgba(244,243,239,0.06)" stroke-width="1">
+              <line x1="0" y1="70" x2="400" y2="70"/><line x1="0" y1="130" x2="400" y2="130"/>
+              <line x1="0" y1="190" x2="400" y2="190"/><line x1="0" y1="250" x2="400" y2="250"/>
+            </g>
+            <!-- mini correlation heatmap -->
+            <g transform="translate(30,36)">
+              <g font-family="IBM Plex Mono, monospace" font-size="9" fill="#5B5B60"></g>
+              <g id="hm1">
+                <rect x="0"  y="0" width="14" height="14" rx="3" fill="#CBFF4D" opacity="0.85"/>
+                <rect x="18" y="0" width="14" height="14" rx="3" fill="#9C8CFF" opacity="0.5"/>
+                <rect x="36" y="0" width="14" height="14" rx="3" fill="#FF6E5C" opacity="0.35"/>
+                <rect x="0"  y="18" width="14" height="14" rx="3" fill="#9C8CFF" opacity="0.6"/>
+                <rect x="18" y="18" width="14" height="14" rx="3" fill="#CBFF4D" opacity="0.7"/>
+                <rect x="36" y="18" width="14" height="14" rx="3" fill="#9C8CFF" opacity="0.4"/>
+              </g>
+            </g>
+            <!-- trend line -->
+            <polyline points="30,230 90,205 150,215 210,170 270,182 330,120 370,95"
+              fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#CBFF4D">
+              <circle cx="30" cy="230" r="3.5"/><circle cx="150" cy="215" r="3.5"/>
+              <circle cx="270" cy="182" r="3.5"/><circle cx="370" cy="95" r="3.5"/>
+            </g>
+            <!-- car silhouette -->
+            <g transform="translate(215,222)" fill="none" stroke="rgba(244,243,239,0.35)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M0,18 L8,18 L18,2 L58,2 L70,18 L100,18 L100,26 L0,26 Z"/>
+              <circle cx="18" cy="26" r="7" fill="#0c0c0e"/>
+              <circle cx="82" cy="26" r="7" fill="#0c0c0e"/>
+            </g>
+            <text x="30" y="20" font-family="IBM Plex Mono, monospace" font-size="10" fill="#5B5B60">2010</text>
+            <text x="345" y="20" font-family="IBM Plex Mono, monospace" font-size="10" fill="#5B5B60">2024</text>
+          </svg>
+          <div class="wipe"></div>
+        </div>
+      </div>
+      <div class="show-body">
+        <div class="idx">02 / @data</div>
+        <h3>BMW Global Sales Analysis</h3>
+        <p>Analyzed 14 years of BMW sales data (~50,000 records) across models, regions, pricing, and fuel types — producing a correlation heatmap, 12 distribution charts, and a final dashboard.</p>
+        <div class="proj-tags"><span>Python</span><span>Pandas</span><span>Matplotlib</span><span>Seaborn</span></div>
+      </div>
+    </div>
+
+    <!-- 03 — HR Attrition -->
+    <div class="show-item" data-tilt-frame>
+      <div class="show-media">
+        <div class="show-ring"></div>
+        <div class="show-frame">
+          <span class="show-status status-done">COMPLETE</span>
+          <span class="show-badge">1,470 employee records</span>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#15161a"/><stop offset="100%" stop-color="#0c0c0e"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#g3)"/>
+            <g stroke="rgba(244,243,239,0.06)" stroke-width="1">
+              <line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="120" x2="400" y2="120"/>
+              <line x1="0" y1="180" x2="400" y2="180"/><line x1="0" y1="240" x2="400" y2="240"/>
+            </g>
+            <!-- bars -->
+            <g>
+              <rect x="40"  y="150" width="34" height="90" rx="5" fill="rgba(244,243,239,0.14)"/>
+              <rect x="90"  y="95"  width="34" height="145" rx="5" fill="#FF6E5C" opacity="0.85"/>
+              <rect x="140" y="185" width="34" height="55" rx="5" fill="rgba(244,243,239,0.14)"/>
+              <rect x="190" y="120" width="34" height="120" rx="5" fill="rgba(244,243,239,0.14)"/>
+              <rect x="240" y="70"  width="34" height="170" rx="5" fill="#9C8CFF" opacity="0.9"/>
+              <rect x="290" y="160" width="34" height="80" rx="5" fill="rgba(244,243,239,0.14)"/>
+            </g>
+            <line x1="30" y1="240" x2="335" y2="240" stroke="rgba(244,243,239,0.2)"/>
+            <text x="40" y="40" font-family="IBM Plex Mono, monospace" font-size="11" fill="#9B9B9F">Attrition % by department size</text>
+            <g font-family="IBM Plex Mono, monospace" font-size="9" fill="#5B5B60">
+              <text x="46" y="256">Sales</text><text x="93" y="256">R&amp;D</text><text x="150" y="256">HR</text>
+              <text x="188" y="256">Mktg</text><text x="240" y="256">Tech</text><text x="292" y="256">Ops</text>
+            </g>
+          </svg>
+          <div class="wipe"></div>
+        </div>
+      </div>
+      <div class="show-body">
+        <div class="idx">03 / @data</div>
+        <h3>HR Employee Attrition Analysis</h3>
+        <p>Cleaned and analyzed 1,470 employee records, recalculating attrition by department size rather than raw counts — correcting a misleading initial finding.</p>
+        <div class="proj-tags"><span>Python</span><span>Pandas</span><span>Matplotlib</span><span>Seaborn</span></div>
+      </div>
+    </div>
+
+    <!-- 04 — Titanic -->
+    <div class="show-item rev" data-tilt-frame>
+      <div class="show-media">
+        <div class="show-ring"></div>
+        <div class="show-frame">
+          <span class="show-status status-done">COMPLETE</span>
+          <span class="show-badge">5 phases · 7 visualizations</span>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#101217"/><stop offset="100%" stop-color="#0c0c0e"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="300" fill="url(#g4)"/>
+            <!-- waterline -->
+            <line x1="0" y1="210" x2="400" y2="210" stroke="rgba(156,140,255,0.25)" stroke-width="1.5"/>
+            <!-- iceberg -->
+            <path d="M300,210 L322,150 L340,175 L360,140 L378,210 Z" fill="rgba(244,243,239,0.08)" stroke="rgba(244,243,239,0.18)"/>
+            <!-- ship silhouette -->
+            <g fill="none" stroke="rgba(244,243,239,0.45)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M30,190 L30,140 L48,140 L48,120 L60,120 L60,140 L78,140 L78,105 L90,105 L90,140 L150,140 L150,190"/>
+              <path d="M20,190 L165,190 L152,208 L33,208 Z"/>
+              <line x1="60" y1="120" x2="60" y2="96" stroke-width="2"/>
+            </g>
+            <!-- survival bars -->
+            <g transform="translate(210,60)">
+              <text x="0" y="-10" font-family="IBM Plex Mono, monospace" font-size="10" fill="#9B9B9F">Survival: 1st/Female vs 3rd/Male</text>
+              <rect x="0"  y="0" width="34" height="140" rx="5" fill="#CBFF4D"/>
+              <text x="17" y="-16" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="15" fill="#CBFF4D">97%</text>
+              <rect x="60" y="120" width="34" height="20" rx="5" fill="rgba(244,243,239,0.18)"/>
+              <text x="77" y="112" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="15" fill="#9B9B9F">14%</text>
+            </g>
+          </svg>
+          <div class="wipe"></div>
+        </div>
+      </div>
+      <div class="show-body">
+        <div class="idx">04 / @data</div>
+        <h3>Titanic Survival Analysis</h3>
+        <p>Built a 5-phase notebook with 7 visualizations showing gender and ticket class as the strongest predictors of survival — 97% vs. 14% across groups.</p>
+        <div class="proj-tags"><span>Python</span><span>Pandas</span><span>Matplotlib</span><span>Seaborn</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHAT I BRING -->
+<section id="bring">
+  <div class="sec-head reveal">
+    <h2>What I <span style="color:var(--lime)">bring.</span></h2>
+    <p>Capabilities built through independent projects and real leadership, not just coursework.</p>
+  </div>
+  <div class="bring-grid reveal">
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\data_cleaning_01.jpg" alt="Data cleaning work sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <line x1="6" y1="32" x2="34" y2="32" stroke="rgba(244,243,239,0.15)" stroke-width="1.4"/>
+          <line x1="6" y1="32" x2="6" y2="8" stroke="rgba(244,243,239,0.15)" stroke-width="1.4"/>
+          <circle cx="12" cy="26" r="2.2" fill="#9C8CFF"/><circle cx="18" cy="20" r="2.2" fill="#9C8CFF"/>
+          <circle cx="16" cy="14" r="2.2" fill="#9C8CFF"/><circle cx="24" cy="16" r="2.2" fill="#CBFF4D"/>
+          <circle cx="28" cy="11" r="2.2" fill="#CBFF4D"/>
+          <path d="M8,28 L30,10" stroke="#CBFF4D" stroke-width="1.6" stroke-linecap="round"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\data_cleaning_02.jpg" alt="EDA notebook sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="7" y="22" width="5" height="10" rx="1.5" fill="rgba(244,243,239,0.18)"/>
+          <rect x="14" y="14" width="5" height="18" rx="1.5" fill="#CBFF4D"/>
+          <rect x="21" y="9" width="5" height="23" rx="1.5" fill="#CBFF4D"/>
+          <rect x="28" y="17" width="5" height="15" rx="1.5" fill="rgba(244,243,239,0.18)"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\data_cleaning_03.jpg" alt="Data cleaning work sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">01</div>
+      <h3>Data Cleaning &amp; EDA</h3>
+      <p>Imputation, correlation and distribution analysis — finding what a dataset actually says before charting it.</p>
+    </div>
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\visual_01.jpg" alt="Dashboard sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <line x1="6" y1="33" x2="34" y2="33" stroke="rgba(244,243,239,0.2)" stroke-width="1.4"/>
+          <rect x="9" y="18" width="5" height="15" rx="1.5" fill="#9C8CFF"/>
+          <rect x="17" y="10" width="5" height="23" rx="1.5" fill="#CBFF4D"/>
+          <rect x="25" y="22" width="5" height="11" rx="1.5" fill="#9C8CFF"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\visual_02.jpg" alt="Chart visualization sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <path d="M6,26 L14,18 L21,22 L28,10 L34,14" stroke="#CBFF4D" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="28" cy="10" r="2.4" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\visual_03.jpg" alt="Dashboard sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">02</div>
+      <h3>Visualization &amp; Dashboards</h3>
+      <p>Matplotlib and Seaborn, from single charts to full dashboards people can actually read at a glance.</p>
+    </div>
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\modeling_01.jpg" alt="Modeling notebook sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <g stroke="rgba(244,243,239,0.25)" stroke-width="1">
+            <line x1="10" y1="12" x2="22" y2="10"/><line x1="10" y1="12" x2="22" y2="20"/><line x1="10" y1="12" x2="22" y2="30"/>
+            <line x1="10" y1="28" x2="22" y2="10"/><line x1="10" y1="28" x2="22" y2="20"/><line x1="10" y1="28" x2="22" y2="30"/>
+            <line x1="22" y1="10" x2="32" y2="18"/><line x1="22" y1="20" x2="32" y2="18"/><line x1="22" y1="30" x2="32" y2="18"/>
+          </g>
+          <circle cx="10" cy="12" r="2.6" fill="#9C8CFF"/><circle cx="10" cy="28" r="2.6" fill="#9C8CFF"/>
+          <circle cx="22" cy="10" r="2.2" fill="#F4F3EF" opacity="0.7"/><circle cx="22" cy="20" r="2.2" fill="#F4F3EF" opacity="0.7"/><circle cx="22" cy="30" r="2.2" fill="#F4F3EF" opacity="0.7"/>
+          <circle cx="32" cy="18" r="2.8" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\modeling_02.jpg" alt="Career readiness score model sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="13" stroke="rgba(244,243,239,0.18)" stroke-width="2"/>
+          <circle cx="20" cy="20" r="8" stroke="#9C8CFF" stroke-width="2"/>
+          <circle cx="20" cy="20" r="2.6" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\modeling_03.jpg" alt="Modeling work sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">03</div>
+      <h3>Modeling, early stage</h3>
+      <p>scikit-learn and sentence-transformers, currently applied to a predictive Career Readiness Score.</p>
+    </div>
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\survey_01.jpg" alt="Survey design sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="9" y="7" width="22" height="27" rx="3" fill="none" stroke="rgba(244,243,239,0.25)" stroke-width="1.4"/>
+          <rect x="15" y="4" width="10" height="5" rx="1.6" fill="#131316" stroke="rgba(244,243,239,0.3)" stroke-width="1.2"/>
+          <path d="M13,17 l2,2 l4,-4" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="21" y1="18" x2="27" y2="18" stroke="rgba(244,243,239,0.3)" stroke-width="1.6"/>
+          <path d="M13,25 l2,2 l4,-4" stroke="#9C8CFF" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="21" y1="26" x2="27" y2="26" stroke="rgba(244,243,239,0.3)" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\survey_02.jpg" alt="Research question design sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.22)" stroke-width="1.4"/>
+          <path d="M17,17 a3.5,3.5 0 1 1 5,3.1 c-1.4,0.8 -1.9,1.6 -1.9,3.1" stroke="#CBFF4D" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <circle cx="20.1" cy="27" r="1.4" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\survey_03.jpg" alt="Survey design sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">04</div>
+      <h3>Survey &amp; Research Design</h3>
+      <p>Built an original student survey from scratch — question design, anonymity, and scope, not a downloaded dataset.</p>
+    </div>
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\leader_01.jpg" alt="Team leadership sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <circle cx="15" cy="14" r="4.4" fill="#9C8CFF"/>
+          <circle cx="26" cy="16" r="3.6" fill="rgba(244,243,239,0.35)"/>
+          <path d="M7,32 c0,-6.2 5,-9.4 8,-9.4 c3,0 8,3.2 8,9.4" stroke="#9C8CFF" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M21,32 c0,-5.4 4,-8.2 7,-8.2 c2.4,0 5.6,2 6.4,6" stroke="rgba(244,243,239,0.35)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\leader_02.jpg" alt="Carnival event sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <line x1="12" y1="6" x2="12" y2="34" stroke="rgba(244,243,239,0.3)" stroke-width="1.6"/>
+          <path d="M12,8 L29,12 L20,16 L29,20 L12,24 Z" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\leader_03.jpg" alt="Leadership sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">05</div>
+      <h3>Project &amp; Event Leadership</h3>
+      <p>Led a 3-student team through a school carnival that drew 19–21 schools — logistics, mentorship, and delivery.</p>
+    </div>
+    <div class="bring-card">
+      <div class="chip-a bring-chip">
+        <img src="images\com_01.jpg" alt="Design work sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <path d="M11,29 L24,10 a2.6,2.6 0 0 1 4,3.3 L16,32 l-6.5,1.6 Z" fill="none" stroke="#CBFF4D" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M22,13 l5,4" stroke="#9C8CFF" stroke-width="1.7"/>
+        </svg></div>
+      </div>
+      <div class="chip-b bring-chip">
+        <img src="images\com_02.jpg" alt="Brand and layout sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="7" y="8" width="26" height="24" rx="3" fill="none" stroke="rgba(244,243,239,0.25)" stroke-width="1.4"/>
+          <line x1="7" y1="16" x2="33" y2="16" stroke="rgba(244,243,239,0.25)" stroke-width="1.2"/>
+          <rect x="11" y="20" width="7" height="7" rx="1.5" fill="#9C8CFF"/>
+          <rect x="21" y="20" width="7" height="7" rx="1.5" fill="#CBFF4D"/>
+        </svg></div>
+      </div>
+      <div class="chip-c bring-chip">
+        <img src="images\com_03.jpg" alt="Design work sample" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="chip-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none">
+          <rect x="8" y="8" width="24" height="24" rx="4" fill="none" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#CBFF4D" stroke-width="1.6"/>
+        </svg></div>
+      </div>
+      <div class="num">06</div>
+      <h3>Communication &amp; Design</h3>
+      <p>2.5+ years freelancing in Canva and Photoshop — making findings and brands look like they belong in front of people.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ADDITIONAL / FREELANCE -->
+<section id="extra">
+  <div class="sec-head reveal">
+    <h2>Outside the <span style="color:var(--lime)">notebook.</span></h2>
+    <p>Freelance work that runs alongside the data projects.</p>
+  </div>
+  <div class="extra-grid reveal">
+    <div class="extra-card">
+      <div class="mono" style="font-size:11px;color:var(--violet);">SINCE 2023</div>
+      <h4>Freelance Graphic Designer</h4>
+      <div class="price">2.5+ <span>years</span></div>
+      <p class="d">Promotional posters, brand assets, and social media creatives for local businesses, using Canva and Adobe Photoshop.</p>
+    </div>
+    <div class="extra-card">
+      <div class="mono" style="font-size:11px;color:var(--violet);">ONGOING</div>
+      <h4>Freelance WordPress Developer</h4>
+      <div class="price">Client sites <span>built &amp; maintained</span></div>
+      <p class="d">Building and maintaining WordPress websites for clients, end to end.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GRAPHIC DESIGN SHOWCASE -->
+<section id="design" style="padding-bottom:0;">
+  <div class="sec-head reveal">
+    <h2>Graphic <span style="color:var(--lime)">design.</span></h2>
+    <p>Posters, brand assets, and social creatives made for real clients — 2.5+ years in Canva and Photoshop.</p>
+  </div>
+</section>
+<div class="poster-marquee-wrap reveal">
+  <div class="poster-track">
+    <div class="poster-card"><img src="images\image_01.webp" alt="Poster design 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 01</span></div></div>
+    <div class="poster-card"><img src="images\image_02.png" alt="Poster design 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 02</span></div></div>
+    <div class="poster-card"><img src="images\image_10.png" alt="Poster design 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 03</span></div></div>
+    <div class="poster-card"><img src="images\image_04.webp" alt="Poster design 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 04</span></div></div>
+    <div class="poster-card"><img src="images\image_05.webp" alt="Poster design 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 05</span></div></div>
+    <div class="poster-card"><img src="images\image_06.webp" alt="Poster design 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 06</span></div></div>
+    <div class="poster-card"><img src="images\image_07.webp" alt="Poster design 07" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 07</span></div></div>
+    <div class="poster-card"><img src="images\image_08_jpg" alt="Poster design 08" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 08</span></div></div>
+    <!-- duplicate set for seamless loop -->
+    <div class="poster-card" aria-hidden="true"><img src="images\image__01.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 01</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_02.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 02</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_10.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 03</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_04.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 04</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_05.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 05</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_06.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 06</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_07.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 07</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_08_jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 08</span></div></div>
+  </div>
+</div>
+<div class="poster-marquee-wrap reveal">
+  <div class="poster-track poster-track-reverse">
+    <div class="poster-card"><img src="images\image_09.webp" alt="Poster design 05" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 05</span></div></div>
+    <div class="poster-card"><img src="images\image_02.png" alt="Poster design 06" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 06</span></div></div>
+    <div class="poster-card"><img src="images\image_11.jpg" alt="Poster design 07" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 07</span></div></div>
+    <div class="poster-card"><img src="images\image_12.png" alt="Poster design 08" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 08</span></div></div>
+    <div class="poster-card"><img src="images\image_13.webp" alt="Poster design 01" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 01</span></div></div>
+    <div class="poster-card"><img src="images\image_14.wenp" alt="Poster design 02" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 02</span></div></div>
+    <div class="poster-card"><img src="images\image_15.png" alt="Poster design 03" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 03</span></div></div>
+    <div class="poster-card"><img src="images\image_16.png" alt="Poster design 04" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 04</span></div></div>
+    <!-- duplicate set for seamless loop -->
+    <div class="poster-card" aria-hidden="true"><img src="images\image_09.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 05</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_02.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 06</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_11.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 07</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_12.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 08</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_13.webp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 01</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_14.wenp" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 02</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_15.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 03</span></div></div>
+    <div class="poster-card" aria-hidden="true"><img src="images\image_16.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="poster-fallback" style="display:none"><svg viewBox="0 0 40 40" fill="none"><rect x="7" y="5" width="26" height="30" rx="3" stroke="rgba(244,243,239,0.3)" stroke-width="1.4"/><path d="M11,26 L18,17 L23,22 L29,12" stroke="#CBFF4D" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>POSTER 04</span></div></div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="cta-final reveal">
+    <div class="kicker" style="justify-content:center;display:flex;">Let's talk</div>
+    <h2>Ready to turn your<br>data into a decision.</h2>
+    <p>Open to Data Analyst internships and collaborations in Kathmandu and remote — reach out any time.</p>
+    <div class="hero-cta" style="margin-top:0;">
+      <a class="btn btn-lime" href="mailto:sandipsubedi012@gmail.com">sandipsubedi012@gmail.com</a>
+      <a class="btn btn-outline" href="tel:+9779769355172">+977 9769355172</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Sandip Subedi · Kathmandu, Nepal</span>
+  <span>LinkedIn · GitHub</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+/* ---------------- PRELOADER ---------------- */
+const preloader = document.getElementById('preloader');
+preloader.classList.add('animate');
+window.addEventListener('load', ()=>{
+  setTimeout(()=> preloader.classList.add('hide'), 900);
+});
+setTimeout(()=> preloader.classList.add('hide'), 2400); // safety fallback
+
+/* ---------------- LENIS SMOOTH SCROLL ---------------- */
+let lenis;
+try{
+  lenis = new Lenis({ duration: 0.5, easing: (t)=> 1 - Math.pow(1-t, 2), smoothWheel: true, wheelMultiplier: 1 });
+  function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+  lenis.on('scroll', ()=> { if(window.ScrollTrigger) ScrollTrigger.update(); });
+}catch(e){ /* graceful fallback to native scroll */ }
+
+/* smooth anchor scrolling via Lenis */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    const id = a.getAttribute('href');
+    const target = document.querySelector(id);
+    if(target){
+      e.preventDefault();
+      if(lenis){ lenis.scrollTo(target, {offset:-40, duration:1.3}); }
+      else target.scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
+
+/* ---------------- NAV + PROGRESS BAR ---------------- */
+const nav = document.querySelector('nav');
+const progressBar = document.getElementById('progressBar');
+function onScroll(){
+  const y = window.scrollY;
+  nav.style.background = y > 40 ? 'rgba(17,17,19,0.92)' : 'rgba(20,20,22,0.7)';
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  progressBar.style.width = (max > 0 ? (y/max)*100 : 0) + '%';
+}
+window.addEventListener('scroll', onScroll);
+onScroll();
+
+/* ---------------- CURSOR GLOW (desktop only) ---------------- */
+const glow = document.getElementById('cursorGlow');
+let gx=0, gy=0, cx=0, cy=0;
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  window.addEventListener('mousemove', (e)=>{ gx = e.clientX; gy = e.clientY; });
+  (function loopGlow(){
+    cx += (gx-cx)*0.12; cy += (gy-cy)*0.12;
+    glow.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loopGlow);
+  })();
+} else { glow.style.display = 'none'; }
+
+/* ---------------- HERO PHOTO TILT ---------------- */
+const heroPhoto = document.getElementById('heroPhoto');
+if(heroPhoto){
+  heroPhoto.addEventListener('mousemove', (e)=>{
+    const r = heroPhoto.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    heroPhoto.style.transform = `rotateY(${x*14}deg) rotateX(${-y*14}deg) scale(1.02)`;
+  });
+  heroPhoto.addEventListener('mouseleave', ()=> heroPhoto.style.transform = 'rotateY(0) rotateX(0) scale(1)');
+}
+
+/* ---------------- PROJECT SHOWCASE: TILT + WIPE REVEAL ---------------- */
+document.querySelectorAll('.show-frame').forEach(frame=>{
+  frame.addEventListener('mousemove', (e)=>{
+    const r = frame.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    frame.style.transform = `rotateY(${x*10}deg) rotateX(${-y*10}deg) scale(1.015)`;
+  });
+  frame.addEventListener('mouseleave', ()=> frame.style.transform = 'rotateY(0) rotateX(0) scale(1)');
+});
+
+if(typeof gsap !== 'undefined'){
+  document.querySelectorAll('.show-frame .wipe').forEach(wipe=>{
+    gsap.set(wipe, {transformOrigin:'top'});
+    if(typeof ScrollTrigger !== 'undefined'){
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.to(wipe, {
+        scaleY:0, duration:1, ease:'power4.inOut',
+        scrollTrigger:{ trigger: wipe.closest('.show-item'), start:'top 82%', toggleActions:'play none none none' }
+      });
+    } else {
+      gsap.to(wipe, {scaleY:0, duration:1, ease:'power4.inOut', delay:0.2});
+    }
+  });
+} else {
+  document.querySelectorAll('.show-frame .wipe').forEach(wipe=> wipe.style.display = 'none');
+}
+
+/* ---------------- MAGNETIC BUTTONS ---------------- */
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove', (e)=>{
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width/2) * 0.35;
+    const y = (e.clientY - r.top - r.height/2) * 0.35;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  btn.addEventListener('mouseleave', ()=> btn.style.transform = 'translate(0,0)');
+});
+
+/* ---------------- BRING CARDS: PHOTOS POP ON CURSOR PROXIMITY ---------------- */
+if(typeof gsap !== 'undefined' && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  const bringCards = document.querySelectorAll('#bring .bring-card');
+  const ROT = [-9, 6, -4];
+  const YOFF = [20, -14, 24];
+  const XOFF = [10, -8, 6];
+  bringCards.forEach(card=>{
+    card.querySelectorAll('.bring-chip').forEach((chip,i)=>{
+      gsap.set(chip, { scale:0.55, x: XOFF[i%3], y: YOFF[i%3], rotate: ROT[i%3], opacity:0, filter:'blur(7px)' });
+    });
+  });
+  let bpx=-9999, bpy=-9999;
+  window.addEventListener('mousemove', (e)=>{ bpx=e.clientX; bpy=e.clientY; });
+  const RANGE = 280;
+  (function loopBring(){
+    bringCards.forEach(card=>{
+      const r = card.getBoundingClientRect();
+      const dist = Math.hypot(bpx-(r.left+r.width/2), bpy-(r.top+r.height/2));
+      const near = Math.max(0, 1 - dist/RANGE);
+      const prev = card._bringNear || 0;
+      if(Math.abs(near-prev) > 0.025){
+        card._bringNear = near;
+        const entering = near > prev;
+        card.querySelectorAll('.bring-chip').forEach((chip,i)=>{
+          gsap.to(chip, {
+            opacity: near,
+            scale: 0.55 + near*0.45,
+            x: XOFF[i%3] * (1-near),
+            y: YOFF[i%3] * (1-near),
+            rotate: near>0.06 ? (i%3===1 ? -3 : 3)*near*0.4 : ROT[i%3],
+            filter: near>0.15 ? 'blur(0px)' : 'blur(7px)',
+            duration: entering ? 0.6 : 0.4,
+            delay: entering ? i*0.06 : 0,
+            ease: entering ? 'back.out(1.6)' : 'power2.in',
+            overwrite:'auto'
+          });
+        });
+      }
+    });
+    requestAnimationFrame(loopBring);
+  })();
+}
+
+/* ---------------- COUNT-UP STATS ---------------- */
+document.querySelectorAll('.n[data-count]').forEach(el=>{
+  const target = parseFloat(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = target % 1 !== 0;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      io.unobserve(el);
+      if(typeof gsap !== 'undefined'){
+        const obj = {v:0};
+        gsap.to(obj, {
+          v: target, duration: 1.4, ease:'power2.out',
+          onUpdate: ()=> el.textContent = (isDecimal ? obj.v.toFixed(1) : Math.round(obj.v)) + suffix
+        });
+      } else {
+        el.textContent = (isDecimal ? target.toFixed(1) : target) + suffix;
+      }
+    });
+  }, {threshold:0.6});
+  io.observe(el);
+});
+
+/* ---------------- SCROLL REVEALS ---------------- */
+if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined'){
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll('.reveal').forEach((el)=>{
+    gsap.fromTo(el, {opacity:0, y:44}, {
+      opacity:1, y:0, duration:1, ease:'power3.out',
+      scrollTrigger:{ trigger: el, start:'top 88%', toggleActions:'play none none reverse' }
+    });
+  });
+
+  gsap.utils.toArray('.show-item').forEach((item)=>{
+    const media = item.querySelector('.show-media');
+    const body = item.querySelector('.show-body');
+    const fromRight = item.classList.contains('rev');
+    gsap.fromTo(media, {opacity:0, x: fromRight ? 50 : -50}, {
+      opacity:1, x:0, duration:1, ease:'power3.out',
+      scrollTrigger:{ trigger:item, start:'top 82%', toggleActions:'play none none reverse' }
+    });
+    gsap.fromTo(body, {opacity:0, x: fromRight ? -50 : 50}, {
+      opacity:1, x:0, duration:1, ease:'power3.out', delay:0.1,
+      scrollTrigger:{ trigger:item, start:'top 82%', toggleActions:'play none none reverse' }
+    });
+  });
+
+  gsap.utils.toArray('.j-item').forEach((item, i)=>{
+    gsap.fromTo(item, {opacity:0, y:30}, {
+      opacity:1, y:0, duration:.9, ease:'power3.out', delay:(i%3)*0.06,
+      scrollTrigger:{ trigger: item, start:'top 90%', toggleActions:'play none none reverse' }
+    });
+  });
+
+  gsap.utils.toArray('.bring-card').forEach((card, i)=>{
+    gsap.fromTo(card, {opacity:0, y:26}, {
+      opacity:1, y:0, duration:.7, ease:'power3.out', delay:(i%3)*0.08,
+      scrollTrigger:{ trigger: card, start:'top 92%', toggleActions:'play none none reverse' }
+    });
+  });
+
+  gsap.to('.hero-photo-wrap', {
+    y: 40, ease:'none',
+    scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:0.6 }
+  });
+} else {
+  /* fallback: plain IntersectionObserver reveal */
+  const revealEls = document.querySelectorAll('.reveal');
+  const fallbackIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.transition='opacity .8s ease, transform .8s ease'; e.target.classList.add('in'); fallbackIo.unobserve(e.target);} });
+  }, {threshold:0.12});
+  revealEls.forEach(el=>fallbackIo.observe(el));
+}
+
+document.querySelectorAll('.trait-pill').forEach(p=> p.style.opacity = 1);
+</script>
+</body>
+</html>
