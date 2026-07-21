@@ -96,6 +96,8 @@
     .extra-card{padding:26px;}
     .bring-card{padding:30px 24px;}
     .about-card{padding:28px;}
+    .social-card{padding:10px 18px 10px 12px;}
+    .social-row{gap:12px;}
   }
   @media (max-width:400px){
     .hero-stats{gap:26px;}
@@ -312,26 +314,44 @@
   @media (max-width:640px){.bring-chip{display:none;}}
 
   /* ---------------- BLOG ---------------- */
-  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;perspective:1400px;}
   .blog-card{
-    display:flex;flex-direction:column;
+    display:flex;flex-direction:column;position:relative;
     border:1px solid var(--line);border-radius:20px;overflow:hidden;
-    background:var(--panel);
+    background:var(--panel);transform-style:preserve-3d;will-change:transform;
     transition:transform .5s cubic-bezier(.16,1,.3,1), border-color .5s cubic-bezier(.16,1,.3,1), box-shadow .5s cubic-bezier(.16,1,.3,1);
   }
-  .blog-card:hover{transform:translateY(-6px);border-color:var(--line-strong);box-shadow:0 30px 60px -24px rgba(0,0,0,0.65);}
-  .blog-thumb{position:relative;aspect-ratio:16/10;background:linear-gradient(160deg,#16171b,#0c0c0e);}
+  .blog-card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;z-index:3;
+    background:linear-gradient(90deg,var(--lime),var(--violet));
+    transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.16,1,.3,1);
+  }
+  .blog-card:hover::before{transform:scaleX(1);}
+  .blog-card:hover{border-color:var(--line-strong);box-shadow:0 34px 70px -26px rgba(0,0,0,0.7);}
+  .blog-thumb{position:relative;aspect-ratio:16/10;overflow:hidden;background:linear-gradient(160deg,#16171b,#0c0c0e);}
   .blog-thumb svg{width:100%;height:100%;display:block;}
+  .blog-thumb img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform .8s cubic-bezier(.16,1,.3,1),filter .6s ease;filter:grayscale(0.15) contrast(1.03);}
+  .blog-card:hover .blog-thumb img{transform:scale(1.16);filter:grayscale(0) contrast(1.08);}
+  .blog-thumb .thumb-fallback{width:100%;height:100%;}
+  .blog-thumb .wipe{position:absolute;inset:0;background:var(--bg);z-index:4;transform-origin:top;}
+  .blog-thumb::after{
+    content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,transparent 55%, rgba(10,10,11,0.35) 100%);
+    opacity:0;transition:opacity .5s ease;
+  }
+  .blog-card:hover .blog-thumb::after{opacity:1;}
   .blog-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1;}
   .blog-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;color:var(--text-faint);margin-bottom:14px;}
-  .blog-read{border:1px solid var(--line);padding:5px 11px;border-radius:100px;white-space:nowrap;}
-  .blog-card h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16.5px;line-height:1.42;letter-spacing:-0.01em;margin-bottom:20px;}
+  .blog-read{border:1px solid var(--line);padding:5px 11px;border-radius:100px;white-space:nowrap;transition:border-color .4s ease,color .4s ease;}
+  .blog-card:hover .blog-read{border-color:rgba(203,255,77,0.4);color:var(--lime);}
+  .blog-card h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16.5px;line-height:1.42;letter-spacing:-0.01em;margin-bottom:20px;transition:color .4s ease;}
   .blog-link-row{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-dim);transition:color .4s ease;}
-  .blog-link-row .arrow{transition:transform .4s cubic-bezier(.16,1,.3,1);}
+  .blog-link-row .arrow{display:inline-block;transition:transform .45s cubic-bezier(.16,1,.3,1);}
   .blog-card:hover .blog-link-row{color:var(--lime);}
-  .blog-card:hover .blog-link-row .arrow{transform:translateX(4px);}
+  .blog-card:hover .blog-link-row .arrow{transform:translateX(6px);}
   @media (max-width:900px){ .blog-grid{grid-template-columns:1fr 1fr;} }
   @media (max-width:600px){ .blog-grid{grid-template-columns:1fr;} }
+  @media (hover:none){ .blog-card{transform:none !important;} }
 
   /* ---------------- ADDITIONAL / FREELANCE ---------------- */
   .extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
@@ -362,6 +382,23 @@
   }
   .cta-final h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(34px,6vw,64px);letter-spacing:-0.02em;margin-bottom:22px;}
   .cta-final p{color:var(--text-dim);font-size:15.5px;max-width:480px;margin:0 auto 40px;}
+  .social-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:40px;}
+  .social-card{
+    display:flex;align-items:center;gap:14px;text-align:left;
+    border:1px solid var(--line);border-radius:100px;padding:12px 24px 12px 16px;
+    background:rgba(255,255,255,0.02);
+    transition:transform .45s cubic-bezier(.16,1,.3,1), border-color .45s ease, background .45s ease;
+  }
+  .social-card:hover{transform:translateY(-4px);border-color:var(--line-strong);background:rgba(255,255,255,0.05);}
+  .social-card .s-icon{width:38px;height:38px;flex-shrink:0;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--text-dim);transition:color .4s ease, border-color .4s ease;}
+  .social-card:hover .s-icon{color:var(--lime);border-color:rgba(203,255,77,0.4);}
+  .social-card .s-icon svg{width:18px;height:18px;}
+  .social-card .s-label{display:block;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14.5px;}
+  .social-card .s-handle{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-faint);margin-top:2px;}
+  .social-card .s-arrow{margin-left:4px;color:var(--text-dim);transition:transform .45s cubic-bezier(.16,1,.3,1), color .4s ease;}
+  .social-card:hover .s-arrow{transform:translateX(4px);color:var(--lime);}
+  footer a{color:var(--text-faint);transition:color .3s ease;}
+  footer a:hover{color:var(--lime);}
   footer{padding:50px 6vw 60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-faint);max-width:1360px;margin:0 auto;}
 
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
@@ -1057,6 +1094,8 @@
     <!-- 1 — YOLOv8 webcam detection -->
     <a class="blog-card" href="https://pythoninnercode.hashnode.dev/teaching-a-webcam-to-see-building-a-real-time-object-detection-pipeline-with-yolov8" target="_blank" rel="noopener">
       <div class="blog-thumb">
+        <img src="images\image_rag.webp" alt="Teaching a Webcam to See — YOLOv8 object detection" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="thumb-fallback" style="display:none">
         <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16171b"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
           <rect width="400" height="250" fill="url(#bg1)"/>
@@ -1068,6 +1107,8 @@
           <rect x="176" y="150" width="48" height="14" rx="3" fill="rgba(203,255,77,0.14)" stroke="#CBFF4D" stroke-width="1"/>
           <text x="200" y="160" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="#CBFF4D">person 0.94</text>
         </svg>
+        </div>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jul 16, 2026</span><span class="blog-read">5 min read</span></div>
@@ -1079,6 +1120,8 @@
     <!-- 2 — Semantic FAQ bot -->
     <a class="blog-card" href="https://pythoninnercode.hashnode.dev/i-built-a-semantic-faq-bot-that-understands-meaning-instead-of-keywords-project-4" target="_blank" rel="noopener">
       <div class="blog-thumb">
+        <img src="images\image_semantic.webp" alt="Semantic FAQ Bot project cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="thumb-fallback" style="display:none">
         <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16171b"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
           <rect width="400" height="250" fill="url(#bg2)"/>
@@ -1090,6 +1133,8 @@
           <circle cx="300" cy="55" r="4" fill="rgba(156,140,255,0.5)"/><circle cx="300" cy="90" r="4" fill="rgba(156,140,255,0.5)"/>
           <circle cx="300" cy="115" r="4" fill="rgba(156,140,255,0.5)"/><circle cx="300" cy="145" r="4" fill="rgba(156,140,255,0.5)"/>
         </svg>
+        </div>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jul 3, 2026</span><span class="blog-read">5 min read</span></div>
@@ -1101,6 +1146,8 @@
     <!-- 3 — BMW sales data -->
     <a class="blog-card" href="https://pythoninnercode.hashnode.dev/i-analyzed-14-years-of-bmw-sales-data-here-s-what-i-found" target="_blank" rel="noopener">
       <div class="blog-thumb">
+        <img src="images\image_bmw.png" alt="BMW 14-year sales data analysis cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="thumb-fallback" style="display:none">
         <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16171b"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
           <rect width="400" height="250" fill="url(#bg3)"/>
@@ -1116,6 +1163,8 @@
           <path d="M118,155 L148,132 L178,108 L208,124 L238,92 L288,68" stroke="rgba(244,243,239,0.4)" stroke-width="1.2" fill="none" stroke-dasharray="3 3"/>
           <text x="200" y="205" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#9B9B9F">2010 — 2024</text>
         </svg>
+        </div>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jun 10, 2026</span><span class="blog-read">6 min read</span></div>
@@ -1127,6 +1176,8 @@
     <!-- 4 — Titanic survival analysis -->
     <a class="blog-card" href="https://pythoninnercode.hashnode.dev/titanic-survival-analysis-what-the-data-reveals-about-who-lived-and-who-died" target="_blank" rel="noopener">
       <div class="blog-thumb">
+        <img src="images\image_titanic.webp" alt="Titanic survival analysis cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="thumb-fallback" style="display:none">
         <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16171b"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
           <rect width="400" height="250" fill="url(#bg4)"/>
@@ -1139,6 +1190,8 @@
           <rect x="176" y="130" width="14" height="16" fill="none" stroke="#9C8CFF" stroke-width="1.2"/>
           <path d="M255,90 L255,60" stroke="rgba(244,243,239,0.35)" stroke-width="1.5"/>
         </svg>
+        </div>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jun 8, 2026</span><span class="blog-read">9 min read</span></div>
@@ -1150,6 +1203,8 @@
     <!-- 5 — HR data analysis -->
     <a class="blog-card" href="https://pythoninnercode.hashnode.dev/from-raw-data-to-real-insights-my-first-hr-data-analysis-project" target="_blank" rel="noopener">
       <div class="blog-thumb">
+        <img src="images\blog_image_hr.webp" alt="HR data analysis project cover" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <div class="thumb-fallback" style="display:none">
         <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16171b"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
           <rect width="400" height="250" fill="url(#bg5)"/>
@@ -1160,6 +1215,8 @@
           <g transform="translate(270,95)"><circle cx="0" cy="0" r="10" fill="none" stroke="#9C8CFF" stroke-width="1.6"/><path d="M-14,32 a14,16 0 0 1 28,0" fill="none" stroke="#9C8CFF" stroke-width="1.6"/></g>
           <g transform="translate(310,120)"><circle cx="0" cy="0" r="8" fill="none" stroke="rgba(244,243,239,0.4)" stroke-width="1.4"/><path d="M-11,26 a11,13 0 0 1 22,0" fill="none" stroke="rgba(244,243,239,0.4)" stroke-width="1.4"/></g>
         </svg>
+        </div>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jun 3, 2026</span><span class="blog-read">2 min read</span></div>
@@ -1186,6 +1243,7 @@
             <text x="180" y="153">11</text>
           </g>
         </svg>
+        <div class="wipe"></div>
       </div>
       <div class="blog-body">
         <div class="blog-meta mono"><span>Jan 18, 2026</span><span class="blog-read">3 min read</span></div>
@@ -1210,12 +1268,28 @@
       <a class="btn btn-lime" href="mailto:sandipsubedi012@gmail.com">sandipsubedi012@gmail.com</a>
       <a class="btn btn-outline" href="tel:+9779769355172">+977 9769355172</a>
     </div>
+    <div class="social-row">
+      <a class="social-card magnetic" href="https://www.linkedin.com/in/sandip-subedi-5694b136a/" target="_blank" rel="noopener">
+        <span class="s-icon">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="1.5" y="1.5" width="21" height="21" rx="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M7.6 9.8v6.7M7.6 6.9v.15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M11.3 9.8v6.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M11.3 13c0-1.8 1.1-3.2 2.8-3.2s2.6 1.4 2.6 3.2v3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div><span class="s-label">LinkedIn</span><span class="s-handle">sandip-subedi</span></div>
+        <span class="s-arrow">→</span>
+      </a>
+      <a class="social-card magnetic" href="https://github.com/sandipsubedi0" target="_blank" rel="noopener">
+        <span class="s-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.92c-2.78.62-3.37-1.2-3.37-1.2-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z" fill="currentColor"/></svg>
+        </span>
+        <div><span class="s-label">GitHub</span><span class="s-handle">sandipsubedi0</span></div>
+        <span class="s-arrow">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
 <footer>
   <span>© 2026 Sandip Subedi · Kathmandu, Nepal</span>
-  <span>LinkedIn · GitHub</span>
+  <span><a href="https://www.linkedin.com/in/sandip-subedi-5694b136a/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/sandipsubedi0" target="_blank" rel="noopener">GitHub</a></span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -1330,6 +1404,43 @@ if(typeof gsap !== 'undefined'){
   });
 } else {
   document.querySelectorAll('.show-frame .wipe').forEach(wipe=> wipe.style.display = 'none');
+}
+
+/* ---------------- BLOG CARDS: TILT + WIPE REVEAL + STAGGER ---------------- */
+if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+  document.querySelectorAll('.blog-card').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left)/r.width - 0.5;
+      const y = (e.clientY - r.top)/r.height - 0.5;
+      card.style.transform = `rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave', ()=> card.style.transform = 'rotateY(0) rotateX(0) translateY(0)');
+  });
+}
+
+if(typeof gsap !== 'undefined'){
+  document.querySelectorAll('.blog-thumb .wipe').forEach(wipe=>{
+    gsap.set(wipe, {transformOrigin:'top'});
+    if(typeof ScrollTrigger !== 'undefined'){
+      gsap.to(wipe, {
+        scaleY:0, duration:.9, ease:'power4.inOut',
+        scrollTrigger:{ trigger: wipe.closest('.blog-card'), start:'top 88%', toggleActions:'play none none none' }
+      });
+    } else {
+      gsap.to(wipe, {scaleY:0, duration:.9, ease:'power4.inOut', delay:0.15});
+    }
+  });
+  if(typeof ScrollTrigger !== 'undefined'){
+    gsap.utils.toArray('.blog-card').forEach((card, i)=>{
+      gsap.fromTo(card, {opacity:0, y:36, scale:0.96}, {
+        opacity:1, y:0, scale:1, duration:.8, ease:'power3.out', delay:(i%3)*0.1,
+        scrollTrigger:{ trigger: card, start:'top 90%', toggleActions:'play none none reverse' }
+      });
+    });
+  }
+} else {
+  document.querySelectorAll('.blog-thumb .wipe').forEach(wipe=> wipe.style.display = 'none');
 }
 
 /* ---------------- MAGNETIC BUTTONS ---------------- */
